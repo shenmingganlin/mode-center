@@ -1,0 +1,56 @@
+{
+  "manifestVersion": 2,
+  "id": "mode-center",
+  "name": "模式中心",
+  "version": "0.1.10",
+  "entry": "index.js",
+  "capabilities": [
+    "app/hooks.session-input",
+    "app/hooks.agent-before-start",
+    "app/input.status",
+    "app/input.panels"
+  ],
+  "icon": "assets/icon.png",
+  "minAppVersion": "0.972.0",
+  "contributes": {
+    "settings": {
+      "title": "模式中心",
+      "schema": {
+        "properties": {
+          "modes": {
+            "type": "object",
+            "title": "会话模式",
+            "description": "按会话保存卡片与追问。缺省全关。由面板和斜杠写入，不写全局。",
+            "scope": "per-session",
+            "default": {
+              "card": { "on": false, "verbosity": "brief" },
+              "follow": { "on": false, "place": "out" }
+            }
+          },
+          "themeFace": {
+            "type": "string",
+            "title": "面板主题",
+            "description": "模式面板和这个设置页的深浅。跟随用当前 Hana 主题；浅色或深色用宿主下发的对应配色，可以和当前主题相反。",
+            "enum": ["follow", "light", "dark"],
+            "default": "follow",
+            "ui": { "enumLabels": ["跟随当前", "浅色", "深色"] }
+          }
+        }
+      },
+      "ui": {
+        "route": "/settings.html"
+      }
+    },
+    "ui": {
+      "inputStatus": [
+        {
+          "id": "mode-chip",
+          "title": "模式中心",
+          "toolName": "open_mode_picker",
+          "icon": "pin",
+          "text": "关"
+        }
+      ]
+    }
+  }
+}

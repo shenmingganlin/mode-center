@@ -1,0 +1,125 @@
+:root {
+  --hana-radius: calc(var(--radius-md, 8px) * var(--corner-radius-scale, 1));
+  --track: color-mix(in srgb, var(--text, CanvasText) 8%, var(--bg, Canvas));
+  --press: color-mix(in srgb, var(--text, CanvasText) 6%, transparent);
+  --fault: var(--coral, #c0616b);
+}
+
+html {
+  min-height: 100%;
+  background: var(--bg, Canvas);
+}
+
+body {
+  box-sizing: border-box;
+  min-height: 100vh;
+  margin: 0;
+  padding: 16px;
+  background: var(--bg, Canvas);
+  color: var(--text, CanvasText);
+  font-family: var(--font-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, "PingFang SC", "Microsoft YaHei", sans-serif);
+  font-size: var(--fs-ui, 0.82rem);
+  line-height: 1.6;
+  scrollbar-color: var(--border, transparent) transparent;
+}
+
+.settings {
+  max-width: 36em;
+}
+
+h1 {
+  margin: 0 0 4px;
+  font-size: 1.05em;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.description,
+.hint,
+.note {
+  margin: 0;
+  color: var(--text-light, var(--text, CanvasText));
+  overflow-wrap: anywhere;
+}
+
+.description {
+  margin-bottom: 12px;
+}
+
+.seg {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: var(--hana-radius);
+  corner-shape: squircle;
+  background: var(--track);
+}
+
+.opt {
+  flex: 1;
+  min-width: 0;
+  min-height: 32px;
+  padding: 4px 8px;
+  border: 0;
+  border-radius: var(--hana-radius);
+  corner-shape: squircle;
+  background: transparent;
+  color: var(--text, CanvasText);
+  font: inherit;
+  line-height: 1.5;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 140ms ease-out, color 140ms ease-out;
+}
+
+.opt:hover:not([aria-checked="true"]):not(:disabled) {
+  background: var(--press);
+}
+
+.opt[aria-checked="true"] {
+  background: var(--accent, var(--text, CanvasText));
+  color: var(--on-accent, var(--bg, Canvas));
+}
+
+.opt:disabled {
+  cursor: default;
+  opacity: 0.72;
+}
+
+.opt:focus-visible {
+  outline: 2px solid var(--accent, currentColor);
+  outline-offset: 2px;
+}
+
+.hint,
+.status {
+  margin: 8px 0 0;
+}
+
+.status {
+  color: var(--text-light, var(--text, CanvasText));
+  overflow-wrap: anywhere;
+}
+
+.status[data-fault="true"] {
+  color: var(--fault);
+}
+
+.note {
+  margin-top: 20px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent, currentColor) 28%, transparent);
+  color: var(--text, CanvasText);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .opt {
+    transition: none;
+  }
+}

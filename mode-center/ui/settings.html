@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>模式中心</title>
+  <script type="module" src="./assets/settings.js"></script>
+  <link rel="stylesheet" href="./assets/settings.css">
+</head>
+<body>
+  <main class="settings">
+    <h1 id="theme-label">面板主题</h1>
+    <p class="description" id="theme-description">模式面板和这个设置页的深浅，可以和当前 Hana 主题不同。</p>
+    <div class="seg" id="theme-seg" role="radiogroup" aria-labelledby="theme-label" aria-describedby="theme-description" aria-busy="true">
+      <button type="button" class="opt" role="radio" data-face="follow" aria-checked="true" tabindex="0" disabled>跟随当前</button>
+      <button type="button" class="opt" role="radio" data-face="light" aria-checked="false" tabindex="-1" disabled>浅色</button>
+      <button type="button" class="opt" role="radio" data-face="dark" aria-checked="false" tabindex="-1" disabled>深色</button>
+    </div>
+    <p class="hint" id="theme-fallback" role="status" hidden>这份 Hana 没有单独的浅色或深色样式，先跟着当前主题</p>
+    <p class="status" id="theme-status" role="status" aria-live="polite">在读面板主题</p>
+    <p class="note">模式按当前会话记在输入框上方的面板里。这里没有全局开关。</p>
+  </main>
+</body>
+</html>

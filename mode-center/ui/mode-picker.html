@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>模式</title>
+  <script>
+    (function () {
+      try {
+        var params = new URLSearchParams(location.search);
+        var theme = params.get("hana-theme");
+        var href = params.get("hana-css");
+        var appearance = params.get("hana-theme-appearance");
+        if (appearance === "dark" || appearance === "light") {
+          var paletteCss = params.get("hana-palette-" + appearance + "-css");
+          var paletteTheme = params.get("hana-palette-" + appearance + "-theme");
+          if (paletteCss) href = paletteCss;
+          if (paletteTheme) theme = paletteTheme;
+        }
+        if (theme) document.documentElement.dataset.theme = theme;
+        if (!href) return;
+        var link = document.createElement("link");
+        link.id = "hana-theme-css";
+        link.rel = "stylesheet";
+        link.href = href;
+        document.head.appendChild(link);
+      } catch (error) {
+        /* 主题参数缺失时，点选仍可用。 */
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="./assets/mode-picker.css">
+</head>
+<body>
+  <div class="slip" id="slip" data-expanded="false" data-phase="wait">
+    <div class="bar">
+      <svg class="mark" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+        <rect class="mark-face" x="1" y="1" width="14" height="14" rx="3"></rect>
+        <path class="mark-lines" d="M4 6.15h8M4 9.85h5.2"></path>
+      </svg>
+      <span class="summary" id="summary" aria-live="polite">在等宿主确认会话</span>
+      <svg class="chev" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true">
+        <path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+      <button type="button" class="hit" id="expand" aria-expanded="false" aria-label="展开模式选择"></button>
+      <button type="button" class="collapse" id="collapse" hidden>收起</button>
+    </div>
+    <div class="groups" id="groups">
+      <div class="group" role="radiogroup" aria-labelledby="card-label" id="card-group">
+        <span class="label" id="card-label">卡片</span>
+        <div class="seg" id="card-seg"></div>
+      </div>
+      <div class="group" role="radiogroup" aria-labelledby="follow-label" id="follow-group">
+        <span class="label" id="follow-label">追问</span>
+        <div class="seg" id="follow-seg"></div>
+      </div>
+      <div class="group" role="radiogroup" aria-labelledby="place-label" id="place-group" hidden>
+        <span class="label" id="place-label">位置</span>
+        <div class="seg" id="place-seg"></div>
+      </div>
+    </div>
+    <p class="status" id="status" role="status">
+      <span id="status-text"></span>
+      <button type="button" class="retry" id="retry" hidden>再读一次</button>
+    </p>
+  </div>
+  <script>
+    window.addEventListener("error", function () {
+      if (window.__modePickerBooted) return;
+      var el = document.getElementById("summary");
+      if (el) el.textContent = "面板没连上宿主";
+    });
+  </script>
+  <script type="module" src="./assets/mode-picker.js"></script>
+</body>
+</html>
