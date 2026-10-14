@@ -58,8 +58,9 @@
 
 示例（卡内）：`[模式中心] 卡片开·精简：过程文字，结论一张卡，读 card-reply。追问开：三条可接着问的问题，放进结论卡，不要在卡片后面再写一份。这张卡若放不下追问，就写在卡片后面，不要吞掉。本行是应用注入。`
 
-- 主路：`session/input`，改写只进模型输入。
-- 辅路：`agent/before-start`，只改 `systemPrompt`，不改对话记录。
+- 仍登记 `session/input`。它改的是模型看到的这一条输入，不改界面原话。宿主这一版桌面提交没有把这个裁决送进应用函数体，失败也不写日志。不能靠它。
+- 模型输入改走 `agent/pre-step`：只改送给模型的 messages 副本里最后一条 user 的文本，不写回会话记录，界面原话不变。「这次不用卡片」这一条在这里生效，不落盘。
+- 辅路：`agent/before-start`，只改 `systemPrompt`，不改对话记录，也不看这一条的跳过口令。
 - 同一段文本里已经有 `[模式中心]` 到 `本行是应用注入。` 时，用当前句子换掉它，不要再追加第二句。当前句为空（两个都关）时删掉旧句。句子没变就不改。
 - 不注册 `session.beforeCompact`。返回 `{ compaction }` 会替换摘要。
 - 同回合、没有新消息的自动重试若没被辅路盖住，写成限制，不猜压缩字段。
@@ -74,7 +75,7 @@
 
 ## 能力
 
-`app/hooks.session-input`、`app/hooks.agent-before-start`、`app/input.status`、`app/input.panels`。
+`app/hooks.session-input`、`app/hooks.agent-before-start`、`app/hooks.agent-pre-step`、`app/input.status`、`app/input.panels`。
 
 不声明 `app/hooks.session-before-compact`、`app/sessions.read`。未授权时钩子不跑，对话照常。
 

@@ -155,6 +155,48 @@ export function appendReminder(text, line) {
   return `${text.slice(0, replaceStart)}${currentLine}${text.slice(end)}`;
 }
 
+export function appendReminderToMessages(messages, line) {
+  if (!Array.isArray(messages)) return null;
+  let userIndex = -1;
+  for (let i = messages.length - 1; i >= 0; i -= 1) {
+    if (messages[i]?.role === "user") {
+      userIndex = i;
+      break;
+    }
+  }
+  if (userIndex < 0) return null;
+
+  const message = messages[userIndex];
+  let nextMessage;
+  if (typeof message.content === "string") {
+    const nextText = appendReminder(message.content, line);
+    if (nextText == null) return null;
+    nextMessage = { ...message, content: nextText };
+  } else if (Array.isArray(message.content)) {
+    let textIndex = -1;
+    for (let i = message.content.length - 1; i >= 0; i -= 1) {
+      const part = message.content[i];
+      if (part?.type === "text" && typeof part.text === "string") {
+        textIndex = i;
+        break;
+      }
+    }
+    if (textIndex < 0) return null;
+    const part = message.content[textIndex];
+    const nextText = appendReminder(part.text, line);
+    if (nextText == null) return null;
+    const content = message.content.slice();
+    content[textIndex] = { ...part, text: nextText };
+    nextMessage = { ...message, content };
+  } else {
+    return null;
+  }
+
+  const nextMessages = messages.slice();
+  nextMessages[userIndex] = nextMessage;
+  return nextMessages;
+}
+
 export function normalizeSentence(text) {
   if (typeof text !== "string") return "";
   let value = text.trim();

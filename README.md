@@ -2,11 +2,11 @@
 
 Hana 应用。按会话记住「卡片回答」和「追问」。
 
-这是给群友试用的 **0.1.10**。还没有提交插件市场。市场要另外做登记，这个仓库的 Release 不会自动出现在市场里。
+这是给群友试用的 **0.1.11**。还没有提交插件市场。市场要另外做登记，这个仓库的 Release 不会自动出现在市场里。
 
 ## 安装
 
-1. 打开 [Release v0.1.10](https://github.com/shenmingganlin/mode-center/releases/tag/v0.1.10)，下载 `app-mode-center-0.1.10.zip`。
+1. 打开 [Release v0.1.11](https://github.com/shenmingganlin/mode-center/releases/tag/v0.1.11)，下载 `app-mode-center-0.1.11.zip`。
 2. 在 Hana 里安装这个 zip。
 3. 已经装过旧版的：先卸载再装。数据目录会留下，不用清。
 

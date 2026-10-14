@@ -2,6 +2,7 @@ import { defineApp } from "./sdk/app-contract/server-client.js";
 import {
   DEFAULT_MODES,
   appendReminder,
+  appendReminderToMessages,
   applyCommand,
   applyPatch,
   buildReminder,
@@ -149,6 +150,45 @@ export default defineApp(async (sdk) => {
       return { text: nextText };
     } finally {
       await logHook("session/input", rawId, rawPath, modes, injected);
+    }
+  });
+
+  await sdk.hooks.onDecision("agent/pre-step", async ({ messages, session }) => {
+    const rawId = cleanId(session?.sessionId);
+    const rawPath = cleanId(session?.sessionPath);
+    const { sessionId, sessionPath } = resolveIdentity(rawId, rawPath);
+    let modes = cloneModes(DEFAULT_MODES);
+    let injected = false;
+    try {
+      if (!Array.isArray(messages) || isIsolated(sessionId, sessionPath) || (!sessionId && !sessionPath)) return;
+      if (rawId && rawPath) remember(rawId, rawPath);
+
+      let lastUserText;
+      for (let i = messages.length - 1; i >= 0; i -= 1) {
+        const message = messages[i];
+        if (message?.role !== "user") continue;
+        if (typeof message.content === "string") {
+          lastUserText = message.content;
+        } else if (Array.isArray(message.content)) {
+          for (let j = message.content.length - 1; j >= 0; j -= 1) {
+            const part = message.content[j];
+            if (part?.type === "text" && typeof part.text === "string") {
+              lastUserText = part.text;
+              break;
+            }
+          }
+        }
+        break;
+      }
+
+      const skipCard = matchCommand(lastUserText)?.kind === "skip";
+      modes = await readModes(sessionId, sessionPath);
+      const nextMessages = appendReminderToMessages(messages, buildReminder(modes, skipCard));
+      if (nextMessages == null) return;
+      injected = true;
+      return { messages: nextMessages };
+    } finally {
+      await logHook("agent/pre-step", rawId, rawPath, modes, injected);
     }
   });
 

@@ -2,11 +2,12 @@
   "manifestVersion": 2,
   "id": "mode-center",
   "name": "模式中心",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "entry": "index.js",
   "capabilities": [
     "app/hooks.session-input",
     "app/hooks.agent-before-start",
+    "app/hooks.agent-pre-step",
     "app/input.status",
     "app/input.panels"
   ],

@@ -102,7 +102,11 @@ sdk.userInteraction.show({
 
 `POST /modes` 可以只带 `follow.place`，不带 `follow.on`。只改传入的字段，不要把另一个字段清掉。
 
-`session/input` 改的是模型看到的这一条输入，不替换用户原文里标记之前的字。`agent/before-start` 只改 `systemPrompt` 里的同一句。不注册 `session.beforeCompact`。
+`session/input` 仍登记，改的是模型看到的这一条输入，不替换用户原文里标记之前的字。宿主这一版没有把这个裁决送进应用，不能靠它。
+
+`agent/pre-step` 改送给模型的 messages 副本。只动最后一条 `role === "user"` 的文本：`content` 是字符串就改字符串；是部件数组就改最后一个 `{ type: "text", text }` 的 `text`。没有可改的文本就不改，记一笔日志，不拿掉图片部件。返回新数组，不改入参。其他消息原样留下。两个都关、也没有跳过口令时不返回。旧句已经等于当前句时也不返回。这一条的跳过口令在这里生效，不落盘。
+
+`agent/before-start` 只改 `systemPrompt` 里的同一句，不看跳过口令。不注册 `session.beforeCompact`。
 
 读配置：有 `sessionId` 时先按它读。读到一份合法对象（包括两个都关）就用它，不再按 `sessionPath` 读。只有返回 `null` 或 `undefined` 时才读路径。按编号读抛错时记一笔日志并当全关，不要改读路径。没有编号时才只按路径读。
 
