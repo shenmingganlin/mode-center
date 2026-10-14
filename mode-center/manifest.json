@@ -2,7 +2,8 @@
   "manifestVersion": 2,
   "id": "mode-center",
   "name": "模式中心",
-  "version": "0.1.11",
+  "version": "1.0.0",
+  "description": "按会话记住卡片回答和追问，在模型看到下一条输入前注入提醒。不改你打出来的原话。",
   "entry": "index.js",
   "capabilities": [
     "app/hooks.session-input",
